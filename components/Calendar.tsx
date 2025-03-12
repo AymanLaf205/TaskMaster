@@ -33,20 +33,19 @@ export function TodoCalendar({ onDateSelect, selectedDate }: TodoCalendarProps) 
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
-          className={cn(
-            'w-[280px] justify-start text-left font-normal',
-            !date && 'text-muted-foreground'
-          )}
+          className="w-full h-10 px-3 text-left font-normal"
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, 'PPP', { locale: language === 'ar' ? ar : enUS })
-          ) : (
-            format(new Date(), 'PPP', { locale: language === 'ar' ? ar : enUS })
-          )}
+          <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+          <span className="truncate text-sm">
+            {date ? (
+              format(date, 'MMM dd, yyyy', { locale: language === 'ar' ? ar : enUS })
+            ) : (
+              format(new Date(), 'MMM dd, yyyy', { locale: language === 'ar' ? ar : enUS })
+            )}
+          </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
           selected={date}
@@ -55,6 +54,7 @@ export function TodoCalendar({ onDateSelect, selectedDate }: TodoCalendarProps) 
             onDateSelect(newDate);
           }}
           initialFocus
+          className="rounded-md border"
         />
       </PopoverContent>
     </Popover>

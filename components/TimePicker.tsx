@@ -25,17 +25,14 @@ export function TimePicker({ value, onChange }: TimePickerProps) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn(
-            "w-[130px] justify-start text-left font-normal",
-            !value && "text-muted-foreground"
-          )}
+          className="w-full h-10 px-3 text-left font-normal"
         >
-          <Clock className="mr-2 h-4 w-4" />
-          {value}
+          <Clock className="mr-2 h-4 w-4 shrink-0" />
+          <span className="text-sm">{value}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-0">
-        <div className="grid grid-cols-2 gap-2 p-4">
+      <PopoverContent className="w-64 p-0" align="start">
+        <div className="grid grid-cols-2 gap-2 p-3">
           <div className="space-y-2">
             <div className="text-sm font-medium">Hour</div>
             <div className="h-[200px] overflow-y-auto">

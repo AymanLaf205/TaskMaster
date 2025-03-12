@@ -120,83 +120,106 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${language === 'ar' ? 'rtl' : 'ltr'}`}>
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-primary">{t.title}</h1>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-            >
-              <Languages className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+        <div className="max-w-4xl mx-auto px-4 py-3 sm:px-6">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl sm:text-4xl font-bold text-primary">{t.title}</h1>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+              >
+                <Languages className="h-4 w-4 sm:h-5 sm:w-5" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
+                ) : (
+                  <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="flex items-center gap-2 mb-8">
-          <TodoCalendar
-            selectedDate={selectedDate}
-            onDateSelect={(date) => date && setSelectedDate(date)}
-          />
-          <TimePicker
-            value={selectedTime}
-            onChange={setSelectedTime}
-          />
-          <Input
-            type="text"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            placeholder={t.placeholder}
-            className="flex-1"
-          />
-          <Button type="submit">{t.add}</Button>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="mb-6">
+          <div className="flex flex-col md:flex-row gap-3">
+            {/* Date and Time Container */}
+            <div className="flex w-full md:w-auto gap-2">
+              <div className="flex-1 md:w-[280px]">
+                <TodoCalendar
+                  selectedDate={selectedDate}
+                  onDateSelect={(date) => date && setSelectedDate(date)}
+                />
+              </div>
+              <div className="w-32">
+                <TimePicker
+                  value={selectedTime}
+                  onChange={setSelectedTime}
+                />
+              </div>
+            </div>
+            
+            {/* Task Input Container */}
+            <div className="flex flex-1 gap-2">
+              <Input
+                type="text"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                placeholder={t.placeholder}
+                className="flex-1 h-10"
+              />
+              <Button type="submit" className="h-10 whitespace-nowrap">
+                {t.add}
+              </Button>
+            </div>
+          </div>
         </form>
 
-        <div className="space-y-4">
+        {/* Todo List */}
+        <div className="space-y-3">
           {todos.length === 0 ? (
-            <p className="text-center text-muted-foreground">{t.noTasks}</p>
+            <p className="text-center text-muted-foreground text-sm sm:text-base">
+              {t.noTasks}
+            </p>
           ) : (
             sortedTodos.map((todo, index) => (
               <div
                 key={todo.id}
-                className="flex items-start justify-between p-4 bg-card rounded-lg shadow-sm border border-border/50 hover:border-border/100 transition-colors duration-200"
+                className="flex items-start gap-2 p-3 sm:p-4 bg-card rounded-lg shadow-sm border border-border/50"
               >
-                <div className="flex items-start gap-3 min-w-0 flex-1">
-                  <span className="text-sm text-muted-foreground mt-1 w-6">
-                    {index + 1}.
+                <span className="text-xs sm:text-sm text-muted-foreground mt-1 w-4 sm:w-6">
+                  {index + 1}.
+                </span>
+                <Checkbox
+                  checked={todo.completed}
+                  onCheckedChange={() => toggleTodo(todo.id)}
+                  className="mt-1"
+                />
+                <div className="flex-1 min-w-0">
+                  <span className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm sm:text-base break-words`}>
+                    {todo.text}
                   </span>
-                  <Checkbox
-                    checked={todo.completed}
-                    onCheckedChange={() => toggleTodo(todo.id)}
-                    className="mt-1"
-                  />
-                  <div className="flex flex-col min-w-0">
-                    <span className={`${todo.completed ? 'line-through text-muted-foreground' : ''} break-words whitespace-pre-wrap max-w-full`}>
-                      {todo.text}
-                    </span>
-                    <span className="text-sm text-muted-foreground mt-1">
-                      {todo.time}
-                    </span>
-                  </div>
+                  <span className="block text-xs sm:text-sm text-muted-foreground mt-1">
+                    {todo.time}
+                  </span>
                 </div>
-                <div className="flex gap-2 shrink-0 ml-4">
+                <div className="flex gap-1 sm:gap-2">
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="sm"
                     onClick={() => setEditingTodo({ id: todo.id, text: todo.text })}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="h-8 w-8"
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -204,10 +227,10 @@ export default function Home() {
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
-                        className="text-destructive"
+                        size="sm"
+                        className="h-8 w-8 text-destructive"
                       >
-                        <Trash2 className="h-5 w-5" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
